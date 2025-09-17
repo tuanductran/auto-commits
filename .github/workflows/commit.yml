@@ -1,93 +1,114 @@
 name: Auto Commit
 
-on:   
+on:
   schedule:
-  - cron: "*/120 * * * *" # https://crontab.guru/#*/30_*_*_*_*
+    - cron: "0 */2 * * *"
 
-permissions:                
-    contents: write
-  
+permissions:
+  contents: write
+
 jobs:
   auto_commit:
     runs-on: ubuntu-latest
     steps:
-      - name: DEBUG 
-        run: echo "::debug::Ref = ${{github.ref}}"
-      - uses: actions/checkout@v3      
-        with:
-         persist-credentials: false
-         fetch-depth: 0
+      - name: Debug Ref
+        run: echo "::debug::Ref = ${{ github.ref }}"
 
-      - name: Modify last update
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Update Timestamp
         run: |
-          d=`date '+%Y-%m-%dT%H:%M:%SZ'`
-          echo $d > LAST_UPDATED
-          
-      - name: Commit changes
+          date -u '+%Y-%m-%dT%H:%M:%SZ' > LAST_UPDATED
+
+      - name: Commit Changes
         run: |
           git config --local user.email "tuanductran.dev@gmail.com"
-          git config --local user.name "Tuan Duc Tran"
+          git config --local user.name "tuanductran"
           git add -A
-          
-          arr[0]="chore(bot): 💤 Just woke up to commit"
-          arr[1]="chore(bot): 🥱 Yawning while committing"
-          arr[2]="chore(bot): 😴 Dreaming of commits"
-          arr[3]="chore(bot): 🛋️ Committed from the couch"
-          arr[4]="chore(bot): 🌙 Committing in my sleep"
-          arr[5]="chore(bot): 📺 Netflix and commit"
-          arr[6]="chore(bot): 🍔 Too busy eating to commit"
-          arr[7]="chore(bot): 🛏️ Committing from my cozy bed"
-          arr[8]="chore(bot): 🥱 Too tired to write a proper commit message"
-          arr[9]="chore(bot): 🚫 Procrastinating... but committed"
-          arr[10]="chore(bot): 💤 Committed with my eyes closed"
-          arr[11]="chore(bot): 🌴 Beachside commits"
-          arr[12]="chore(bot): 🛌 Committing from under the covers"
-          arr[13]="chore(bot): 🍹 Lazy day, lazy commits"
-          arr[14]="chore(bot): 📚 Skipping commits for a good book"
-          arr[15]="chore(bot): 🚫 Avoiding work... but committing"
-          arr[16]="chore(bot): ⏰ Late-night commits"
-          arr[17]="chore(bot): 🍕 Pizza break... and a quick commit"
-          arr[18]="chore(bot): 🥱 Committing in my PJs"
-          arr[19]="chore(bot): 🎮 Gaming pause for a commit"
-          arr[20]="chore(bot): 🚶‍♂️🚶‍♀️ Committing at a snail's pace"
-          arr[21]="chore(bot): 📺 Binge-watching while committing"
-          arr[22]="chore(bot): 🌅 Sunset commits"
-          arr[23]="chore(bot): 🛋️ Too comfortable to commit quickly"
-          arr[24]="chore(bot): 😴 Sleepy commits"
-          arr[25]="chore(bot): 🛌 Midday nap and commit"
-          arr[26]="chore(bot): 🍩 Pausing for a sweet commit"
-          arr[27]="chore(bot): 🚶‍♂️🚶‍♀️ Slowly committing step by step"
-          arr[28]="chore(bot): 🛋️ Couch potato commits"
-          arr[29]="chore(bot): 🌸 Procrastinating with flower commits"
-          arr[30]="chore(bot): 🥱 Committing with half-closed eyes"
-          arr[31]="chore(bot): 🎵 Committing to the rhythm of a lazy tune"
-          arr[32]="chore(bot): 🍔 Food coma commits"
-          arr[33]="chore(bot): 📺 TV show paused for a commit"
-          arr[34]="chore(bot): 🚶‍♂️🚶‍♀️ Slow and steady commits"
-          arr[35]="chore(bot): 💤 Dreaming of committed code"
-          arr[36]="chore(bot): 🍕 Pizza-fueled commits"
-          arr[37]="chore(bot): 🥱 Committing while fighting sleep"
-          arr[38]="chore(bot): 🛌 Committing under a warm blanket"
-          arr[39]="chore(bot): 🌅 Lazy sunrise commits"
-          arr[40]="chore(bot): 🎮 Gaming break for a quick commit"
-          arr[41]="chore(bot): 📺 Binge-watching and committing simultaneously"
-          arr[42]="chore(bot): 🌸 Committing at a leisurely pace"
-          arr[43]="chore(bot): 🥱 Committing in the twilight of drowsiness"
-          arr[44]="chore(bot): 🛋️ Lounging and committing"
-          arr[45]="chore(bot): 😴 Dream commits in progress"
-          arr[46]="chore(bot): 🚶‍♂️🚶‍♀️ Committing with a slow stroll"
-          arr[47]="chore(bot): 🌙 Night owl commits"
-          arr[48]="chore(bot): 📚 Escaping into commits instead of reading"
-          arr[49]="chore(bot): 🥱 Committing with heavy eyelids"
-          arr[50]="chore(bot): 🍦 Ice cream break... and a quick commit"
-          
-          rand=$[$RANDOM % ${#arr[@]}]
-          
-          git commit -m "${arr[$rand]}"
-          
-      - name: GIthub Push
+
+          morning=(
+            "chore(bot): 🌅 Sunrise brings fresh updates"
+            "chore(bot): 🍩 Sweet morning break, sweet commit"
+            "chore(bot): 📚 Reading paused for a repository update"
+            "chore(bot): 🚶 Gentle stroll, steady commit"
+          )
+
+          daytime=(
+            "chore(bot): 🛋️ Comfortable midday commit"
+            "chore(bot): 🍔 Lunch break update"
+            "chore(bot): 🍦 Ice cream in one hand, commit in the other"
+            "chore(bot): 🎵 Background music, foreground commit"
+            "chore(bot): 📺 Quick update between streaming sessions"
+            "chore(bot): 🍹 Casual commit during a lazy break"
+          )
+
+          afternoon=(
+            "chore(bot): 🌸 Calm and unhurried commit"
+            "chore(bot): 🛋️ Relaxed afternoon update"
+            "chore(bot): 🚶 Slow-paced commit executed"
+            "chore(bot): 🍕 Pizza-powered update"
+            "chore(bot): 📺 Paused a show to commit updates"
+          )
+
+          evening=(
+            "chore(bot): 🥱 Low-energy evening update"
+            "chore(bot): 🎮 Pausing the game for a short commit"
+            "chore(bot): 📚 Book break interrupted for a quick commit"
+            "chore(bot): 🌴 Vacation mood, but code still delivered"
+            "chore(bot): 🛋️ Lounging with a light commit"
+          )
+
+          night=(
+            "chore(bot): 🌙 Night shift commit, keeping the repo alive"
+            "chore(bot): 💤 Automated commit triggered during idle hours"
+            "chore(bot): 🥱 Commit generated while the bot was dozing off"
+            "chore(bot): 😴 Sleep mode activated, but code still updated"
+            "chore(bot): 🛌 Under the covers, yet updates continue"
+            "chore(bot): 🛏️ Late-night commit before shutting down"
+            "chore(bot): 🥱 Twilight commit before sleep"
+            "chore(bot): 🌙 Night owl commit, keeping things running"
+          )
+
+          randoms=(
+            "chore(bot): 🚫 Procrastination complete, commit delivered"
+            "chore(bot): 🚫 Avoiding tasks, but not this commit"
+            "chore(bot): 💤 Background task, foreground commit"
+            "chore(bot): 😴 Dreaming of stable code, committing anyway"
+            "chore(bot): 🥱 Quick commit made in pajamas"
+            "chore(bot): 🥱 Fighting drowsiness with a commit"
+            "chore(bot): 🍔 Food coma couldn’t stop this commit"
+            "chore(bot): 🍕 Extra slice, extra commit"
+            "chore(bot): 🎮 Game break turned into code push"
+            "chore(bot): 📺 Dual-tasking: streaming and committing"
+          )
+
+          hour=$(date -u +"%H")
+          if [ $hour -ge 5 ] && [ $hour -lt 11 ]; then
+            pool=("${morning[@]}")
+          elif [ $hour -ge 11 ] && [ $hour -lt 15 ]; then
+            pool=("${daytime[@]}")
+          elif [ $hour -ge 15 ] && [ $hour -lt 18 ]; then
+            pool=("${afternoon[@]}")
+          elif [ $hour -ge 18 ] && [ $hour -lt 22 ]; then
+            pool=("${evening[@]}")
+          else
+            pool=("${night[@]}")
+          fi
+
+          if [ $((RANDOM % 5)) -eq 0 ]; then
+            pool+=("${randoms[@]}")
+          fi
+
+          msg=${pool[$RANDOM % ${#pool[@]}]}
+          git commit -m "$msg"
+
+      - name: Push to GitHub
         uses: ad-m/github-push-action@master
         with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
         env:
-            CI: true
+          CI: true
